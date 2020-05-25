@@ -28,7 +28,6 @@ public class DownLoadUtil {
     private static DownLoadUtil downLoadUtil;
     private static Application application;
     private CompleteReceiver item;
-    ;
 
     public static DownLoadUtil getInstance(Activity activity) {
 
@@ -44,7 +43,7 @@ public class DownLoadUtil {
     }
 
     private void initBroadcastReceiver(Activity activity) {
-        if (activity.equals(temp)) {
+        if (item!=null) {
             return;
         }
         application = activity.getApplication();
@@ -84,6 +83,8 @@ public class DownLoadUtil {
                 if (temp != null && temp.getClass().getName().equals(activity.getClass().getName())) {
                     application.unregisterActivityLifecycleCallbacks(this);
                     temp.unregisterReceiver(item);
+                    item=null;
+                    downloadId=0;
                 }
             }
         });
@@ -97,11 +98,16 @@ public class DownLoadUtil {
         if (downloadId != 0) {  //根据任务ID判断是否存在相同的下载任务，如果有则不重新下载
             return;
         }
-        initFile();
+        delFile();
         downloadId = downLoadApk(mContext, url, title, describeStr);
     }
+    public void goDownloadManager() {
 
-    private void initFile() {
+        Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        mContext.startActivity(intent);
+    }
+
+    public void delFile() {
         if (saveFile == null)
             saveFile = new File(mContext.getExternalCacheDir(), "update.apk");
         if (saveFile.exists()) {    //判断文件是否存在，存在的话先删除
@@ -143,7 +149,7 @@ public class DownLoadUtil {
     }
 
 
-    public void installApk() {
+    private void installApk() {
         downloadId = 0;
         Intent intent = new Intent(Intent.ACTION_VIEW);
 
