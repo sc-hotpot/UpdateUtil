@@ -23,7 +23,8 @@ Step 2. Add the dependency
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
  
  
-fileprovider
+provider
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
